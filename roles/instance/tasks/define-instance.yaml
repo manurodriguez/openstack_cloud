@@ -6,6 +6,7 @@
     image: "{{ instance.image }}"
     key_name: "{{ instance.key_name }}"
     flavor: "{{ instance.flavor }}"
+    meta: "{{ instance.meta }}"
     security_groups: "{{ instance.security_groups }}"
     nics:
      - net-name: "{{ instance.network }}"
