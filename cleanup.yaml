@@ -12,6 +12,8 @@
         delete_fip: yes
         state: absent
       loop: "{{ instances }}"
+      tags:
+        - instance
 
     - name: delete router
       os_router:
