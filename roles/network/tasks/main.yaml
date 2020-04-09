@@ -5,11 +5,15 @@
     name: "{{ ext_network_name }}"
     external: "{{ ext_network_routable }}"
 
-- name: Verify public subnet exists
-  os_subnets_info:
-    cloud:  "{{ cloud }}"
-    name: "{{ ext_subnet_name }}"
-  register: result_ext_subnet_name
+#- name: Verify public subnet exists
+#  os_subnets_info:
+#    cloud:  "{{ cloud }}"
+#    name: "{{ ext_subnet_name }}"
+#  register: result_ext_subnet_name
+#
+#- name: print subnet info
+#  debug:
+#    var: result_ext_subnet_name
 
 - name: Setup public subnet
   os_subnet:
@@ -17,7 +21,8 @@
     state: present 
     name: "{{ ext_subnet_name }}"
     network_name: "{{ ext_network_name }}" 
-  when: not result_ext_subnet_name
+    cidr: "{{ ext_subnet_cidr}}"
+#  when: not result_ext_subnet_name.openstack_subnets
 
 - name: Setup private network
   os_network:
