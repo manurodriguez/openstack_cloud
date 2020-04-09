@@ -1,0 +1,30 @@
+- name: Launch instance {{ instance.name }}
+  os_server:
+    state: present
+    cloud: "{{ cloud }}"
+    name: "{{ instance.name }}"
+    image: "{{ instance.image }}"
+    key_name: "{{ instance.key_name }}"
+    flavor: "{{ instance.flavor }}"
+    security_groups: "{{ instance.security_groups }}"
+    nics:
+     - net-name: "{{ instance.network }}"
+
+- name: Attach floating IP
+  os_floating_ip:
+     cloud: "{{ cloud }}"
+     state: present
+     reuse: yes
+     server: "{{ instance.name }}"
+     network: "{{ instance.floating_ip_network }}"
+     wait: true
+     timeout: 180
+  register: r_os_floating_ip
+
+- name: Wait for "{{ instance.name }}" to be available
+  wait_for:
+    host: "{{ r_os_floating_ip.floating_ip.floating_ip_address }}"
+    port: 22
+    search_regex: OpenSSH
+    timeout: 600
+

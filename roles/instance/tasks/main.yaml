@@ -1,0 +1,6 @@
+---
+- include_tasks: define-instance.yaml
+  loop: "{{ instances }}"
+  loop_control:
+    loop_var: instance
+    label: "{{ instance.name }}"

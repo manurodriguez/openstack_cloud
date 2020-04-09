@@ -1,0 +1,15 @@
+- name: Download RHEL image
+  get_url:
+    url: "{{ item.url }}"
+    dest: "{{ playbook_dir }}/{{ item.name }}.qcow2"
+  loop: "{{ images }}"
+
+- name: Load RHEL image into Glance
+  os_image:
+    cloud: "{{ cloud }}"
+    name: "{{ item.name }}"
+    container_format: "{{ item.container_format }}"
+    disk_format: "{{ item.disk_format }}"
+    state: present
+    filename: "{{ playbook_dir }}/{{ item.name }}.qcow2"
+  loop: "{{ images }}"

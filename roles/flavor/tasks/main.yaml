@@ -1,0 +1,8 @@
+- name: "Create 'small' flavor with 2048MB of RAM, 1 virtual CPU, and 10GB of local disk"
+  os_nova_flavor:
+    cloud: "{{ cloud }}"
+    state: present
+    name: "{{ flavor_name }}"
+    ram: "{{ flavor_mem_size }}"
+    vcpus: "{{ flavor_vcpus }}" 
+    disk: "{{ flavor_disk }}"

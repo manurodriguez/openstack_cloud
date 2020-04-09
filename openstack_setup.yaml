@@ -1,0 +1,14 @@
+---
+- name: Setup Openstack project resources 
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - vars.yaml
+  roles:
+    - network
+    - router
+    - flavor
+    - image
+    - secgroup
+    - keypair
+

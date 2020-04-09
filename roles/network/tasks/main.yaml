@@ -1,0 +1,36 @@
+- name: Setup public network
+  os_network:
+    cloud:  "{{ cloud }}"
+    state: present
+    name: "{{ ext_network_name }}"
+    external: "{{ ext_network_routable }}"
+
+- name: Verify public subnet exists
+  os_subnets_info:
+    cloud:  "{{ cloud }}"
+    name: "{{ ext_subnet_name }}"
+  register: result_ext_subnet_name
+
+- name: Setup public subnet
+  os_subnet:
+    cloud: "{{ cloud }}"
+    state: present 
+    name: "{{ ext_subnet_name }}"
+    network_name: "{{ ext_network_name }}" 
+  when: not result_ext_subnet_name
+
+- name: Setup private network
+  os_network:
+    cloud: "{{ cloud }}"
+    state: present
+    name: "{{ priv_network_name }}"
+
+- name: Setup private subnet
+  os_subnet:
+    cloud: "{{ cloud }}"
+    state: present 
+    name: "{{ priv_subnet_name }}"
+    network_name: "{{ priv_network_name }}" 
+    cidr: "{{ priv_subnet_cidr}}"
+    dns_nameservers: "{{ dns_servers }}"
+    host_routes: "{{ ext_routes }}"

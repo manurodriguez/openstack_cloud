@@ -1,0 +1,83 @@
+---
+cloud: ospcloud
+ext_network_name: ext_network
+ext_subnet_name: ext_subnet
+ext_subnet_cidr: "10.10.10.0/24"
+ext_network_routable: true
+dns_servers:
+  - "8.8.4.4"
+  - "8.8.8.8"
+ext_routes:
+  - destination: "192.168.0.0/24"
+    nexthop: "172.16.0.1"
+priv_network_name: priv_network
+priv_subnet_name: priv_subnet
+priv_subnet_cidr: "172.16.0.0/24"
+
+router_name: lab_router
+
+flavor_name: m2.small
+flavor_mem_size: 2048
+flavor_vcpus: 1
+flavor_disk: 10
+
+images:
+  - name: "rhel-guest-image-7.2-20151102.0.x86_64"
+    url: "http://www.opentlc.com/download/osp_advanced_networking/rhel-guest-image-7.2-20151102.0.x86_64.qcow2"
+    container_format: bare
+    disk_format: qcow2
+
+keypair_name: workstation
+keypair_path: "/home/manrodri-redhat.com/.ssh/id_rsa"
+
+secgroups:
+- name: apps
+  rules:
+  - port: 22
+  - port: 8080
+- name: db
+  rules:
+  - port: 22
+  - port: 5432
+- name: frontend
+  rules:
+  - port: 22
+  - port: 80
+  - port: 443
+
+instances:
+- name: app1
+  flavor: m2.small
+  image: rhel-guest-image-7.2-20151102.0.x86_64
+  meta: "group=apps,deployment_name=dev"
+  key_name: workstation
+  network: priv_network
+  floating_ip_network: ext_network
+  security_groups: apps
+
+- name: app2
+  flavor: m2.small
+  image: rhel-guest-image-7.2-20151102.0.x86_64
+  meta: "group=apps,deployment_name=dev"
+  key_name: workstation
+  network: priv_network
+  floating_ip_network: ext_network
+  security_groups: apps
+
+- name: db
+  flavor: m2.small
+  image: rhel-guest-image-7.2-20151102.0.x86_64
+  meta: "group=appdbs,deployment_name=dev"
+  key_name: workstation
+  network: priv_network
+  floating_ip_network: ext_network
+  security_groups: db
+
+- name: frontend
+  flavor: m2.small
+  image: rhel-guest-image-7.2-20151102.0.x86_64
+  meta: "group=frontends,deployment_name=dev"
+  key_name: workstation
+  network: priv_network
+  floating_ip_network: ext_network
+  security_groups: frontend

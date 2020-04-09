@@ -1,0 +1,8 @@
+- name: Setup router
+  os_router:
+    cloud: "{{ cloud }}"
+    state: present
+    name: "{{ router_name }}"
+    network: "{{ ext_network_name }}"
+    interfaces:
+      - "{{ priv_subnet_name }}"

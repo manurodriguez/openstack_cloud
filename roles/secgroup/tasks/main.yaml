@@ -1,0 +1,6 @@
+---
+- include_tasks: define-security_group.yaml
+  loop: "{{ secgroups }}"
+  loop_control:
+    loop_var: secgroup
+    label: "{{ secgroup.name }}"

@@ -1,0 +1,70 @@
+---
+- name: Delete Openstack resources
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - vars.yaml
+  tasks:
+    - name: delete instances
+      os_server:
+        cloud: "{{ cloud }}"
+        name: "{{ item.name }}"
+        delete_fip: yes
+        state: absent
+      loop: "{{ instances }}"
+
+    - name: delete router
+      os_router:
+        cloud: "{{ cloud }}"
+        name: "{{ router_name }}"
+        state: absent
+
+    - name: delete private subnet
+      os_subnet:
+        cloud: "{{ cloud }}"
+        name: "{{ priv_subnet_name }}"
+        state: absent
+
+    - name: delete external subnet
+      os_subnet:
+        cloud: "{{ cloud }}"
+        name: "{{ ext_subnet_name }}"
+        state: absent
+
+    - name: delete private network
+      os_network:
+        cloud: "{{ cloud }}"
+        name: "{{ priv_network_name }}"
+        state: absent
+
+    - name: delete external network
+      os_network:
+        cloud: "{{ cloud }}"
+        name: "{{ ext_network_name }}"
+        state: absent
+
+    - name: delete flavor
+      os_nova_flavor:
+        cloud: "{{ cloud }}"
+        name: "{{ flavor_name }}"
+        state: absent
+
+    - name: delete keypair
+      os_keypair:
+        cloud: "{{ cloud }}"
+        state: absent
+        name: "{{ keypair_name }}"
+
+    - name: delete security group {{ item.name }}
+      os_security_group:
+        cloud: "{{ cloud }}"
+        state: absent
+        name: "{{ item.name }}"
+      loop: "{{ secgroups }}"
+
+    - name: delete images
+      os_image:
+        cloud: "{{ cloud }}"
+        name: "{{ item.name }}"
+        state: absent
+      loop: "{{ images }}"

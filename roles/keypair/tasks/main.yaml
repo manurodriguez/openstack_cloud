@@ -1,0 +1,12 @@
+- name: Generate SSH Keypair
+  openssh_keypair:
+    path: "{{ keypair_path }}"
+  register: r_openssh_keypair
+
+- name: Create OSP keypair
+  os_keypair:
+    cloud: "{{ cloud }}"
+    state: present
+    name: "{{ keypair_name }}"
+    public_key_file: "{{ r_openssh_keypair.filename }}.pub"
+
